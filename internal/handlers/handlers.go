@@ -21,7 +21,7 @@ func HandleUpdateMetric(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	if len(urlParts) < 3 {
+	if len(urlParts) != 3 {
 		http.Error(res, "Invalid request", http.StatusBadRequest)
 		return
 	}
