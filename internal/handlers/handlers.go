@@ -16,7 +16,12 @@ func HandleUpdateMetric(res http.ResponseWriter, req *http.Request) {
 	urlParts := strings.Split(req.URL.Path, "/")
 	urlParts = urlParts[2:]
 
-	if len(urlParts) != 3 {
+	if len(urlParts) < 2 || urlParts[1] == "" {
+		http.Error(res, "Request without metric name", http.StatusNotFound)
+		return
+	}
+
+	if len(urlParts) < 3 {
 		http.Error(res, "Invalid request", http.StatusBadRequest)
 		return
 	}
@@ -24,11 +29,6 @@ func HandleUpdateMetric(res http.ResponseWriter, req *http.Request) {
 	metricType := strings.ToLower(urlParts[0])
 	metricName := urlParts[1]
 	metricValue := urlParts[2]
-
-	if metricName == "" {
-		http.Error(res, "Request without metric name", http.StatusNotFound)
-		return
-	}
 
 	switch metricType {
 	case "gauge":
