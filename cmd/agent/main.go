@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"metrics/internal/utils"
 	"runtime"
 	"time"
@@ -48,20 +47,19 @@ var counterMetrics = map[string]int64{
 
 func main() {
 	var memStats runtime.MemStats
-	var tickNumber = 0
-	var sendInterval = reportInterval / pollInterval
+	var sendInterval int64 = reportInterval / pollInterval
 
 	for {
 		runtime.ReadMemStats(&memStats)
-		utils.CollectData(&memStats, gaugeMetrics, counterMetrics)
+		utils.CollectData(&memStats, gaugeMetrics)
 
-		if tickNumber != sendInterval {
-			tickNumber++
+		if counterMetrics["PollCount"] != sendInterval {
+			counterMetrics["PollCount"]++
 		} else {
 			utils.SendData(gaugeMetrics, counterMetrics, server)
-			tickNumber = 1
+			counterMetrics["PollCount"] = 1
 		}
-		fmt.Println(gaugeMetrics)
+
 		time.Sleep(pollInterval * time.Second)
 	}
 }

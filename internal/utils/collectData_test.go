@@ -19,30 +19,18 @@ func TestCollectData(t *testing.T) {
 		want int64
 	}{
 		{
-			name: "Test 1",
-			args: args{
-				memStats:       &runtime.MemStats{},
-				gaugeMetrics:   map[string]float64{},
-				counterMetrics: map[string]int64{},
-			},
-			want: 1,
-		}, {
-			name: "Test 2",
+			name: "Random value set",
 			args: args{
 				memStats:     &runtime.MemStats{},
 				gaugeMetrics: map[string]float64{},
-				counterMetrics: map[string]int64{
-					"PollCount": 10,
-				},
 			},
-			want: 11,
 		},
 	}
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			CollectData(test.args.memStats, test.args.gaugeMetrics, test.args.counterMetrics)
-			assert.Equal(t, test.want, test.args.counterMetrics["PollCount"])
+			CollectData(test.args.memStats, test.args.gaugeMetrics)
+			assert.NotEqual(t, 0.0, test.args.gaugeMetrics["RandomValue"], "Random value should be set")
 		})
 	}
 }
