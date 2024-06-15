@@ -1,5 +1,10 @@
 package storage
 
+type Repositories interface {
+	ChangeGauge(gaugeName string, newValue float64)
+	IncreaseCounter(counterName string, value int64)
+}
+
 type MetricTypes struct {
 	gauge   map[string]float64
 	counter map[string]int64

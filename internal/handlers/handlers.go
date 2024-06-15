@@ -7,7 +7,9 @@ import (
 	"strings"
 )
 
-func HandleUpdateMetric(res http.ResponseWriter, req *http.Request) {
+func UpdateMetricHandler(res http.ResponseWriter, req *http.Request) {
+	res.Header().Set("Content-Type", "text/plain; charset=utf-8")
+
 	if req.Method != http.MethodPost {
 		http.Error(res, "Only POST requests are allowed!", http.StatusMethodNotAllowed)
 		return
@@ -16,8 +18,18 @@ func HandleUpdateMetric(res http.ResponseWriter, req *http.Request) {
 	urlParts := strings.Split(req.URL.Path, "/")
 	urlParts = urlParts[2:]
 
+	if len(urlParts) < 1 || urlParts[0] == "" {
+		http.Error(res, "Request without metric type", http.StatusNotFound)
+		return
+	}
+
 	if len(urlParts) < 2 || urlParts[1] == "" {
 		http.Error(res, "Request without metric name", http.StatusNotFound)
+		return
+	}
+
+	if len(urlParts) < 3 || urlParts[2] == "" {
+		http.Error(res, "Request without metric value", http.StatusNotFound)
 		return
 	}
 
