@@ -4,10 +4,6 @@ import (
 	"strings"
 )
 
-//func ValidateServerAddress(serverAddress *string) {
-//	fmt.Println(*serverAddress)
-//}
-
 func ValidateFlags(pollInterval *int64, reportInterval *int64, serverAddress *string) {
 	if *pollInterval < 1 {
 		*pollInterval = 2
