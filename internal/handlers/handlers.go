@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"github.com/go-chi/chi/v5"
 	"io"
 	"metrics/internal/storage"
@@ -58,7 +59,7 @@ func GetMetricValueHandler(res http.ResponseWriter, req *http.Request) {
 
 func UpdateMetricHandler(res http.ResponseWriter, req *http.Request) {
 	res.Header().Set("Content-Type", "text/plain; charset=utf-8")
-
+	fmt.Print(req)
 	metricType := chi.URLParam(req, "type")
 	metricName := chi.URLParam(req, "name")
 	metricValue := chi.URLParam(req, "value")
