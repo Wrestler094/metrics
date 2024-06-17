@@ -22,9 +22,10 @@ func main() {
 		flagRunAddress = envRunAddress
 	}
 
-	flagRunAddress = strings.TrimSuffix(flagRunAddress, "http://")
+	flagRunAddress = strings.TrimPrefix(flagRunAddress, "http://")
 	flagRunAddress = strings.TrimSuffix(flagRunAddress, ":")
 	fmt.Printf(flagRunAddress)
+
 	router := chi.NewRouter()
 
 	router.Use(middleware.Logger)
