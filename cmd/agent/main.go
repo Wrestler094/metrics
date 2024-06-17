@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"metrics/internal/utils"
 	"runtime"
 	"time"
@@ -53,6 +54,7 @@ func main() {
 	flag.Int64Var(&flagPollInterval, "p", 2, "frequency of sending metrics to the server (default 10 seconds)")
 	flag.Int64Var(&flagReportInterval, "r", 10, "frequency of sending metrics to the server (default 10 seconds)")
 	flag.Parse()
+	fmt.Println(flagServerAddress)
 
 	if flagPollInterval < 1 {
 		flagPollInterval = 2
