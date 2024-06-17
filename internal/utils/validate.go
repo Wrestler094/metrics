@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"fmt"
 	"strings"
 )
 
@@ -16,6 +15,5 @@ func ValidateFlags(pollInterval *int64, reportInterval *int64, serverAddress *st
 
 	if !(strings.HasPrefix(*serverAddress, "http://")) {
 		*serverAddress = "http://" + *serverAddress
-		fmt.Printf(*serverAddress)
 	}
 }
