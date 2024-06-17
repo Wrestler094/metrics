@@ -8,6 +8,7 @@ import (
 	"metrics/internal/handlers"
 	"net/http"
 	"os"
+	"strings"
 )
 
 var flagRunAddress string
@@ -19,6 +20,8 @@ func main() {
 	if envRunAddress := os.Getenv("ADDRESS"); envRunAddress != "" {
 		flagRunAddress = envRunAddress
 	}
+
+	flagRunAddress = strings.TrimPrefix(flagRunAddress, "http://")
 
 	router := chi.NewRouter()
 
