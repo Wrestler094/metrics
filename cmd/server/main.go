@@ -7,13 +7,18 @@ import (
 	"log"
 	"metrics/internal/handlers"
 	"net/http"
+	"os"
 )
 
 var flagRunAddress string
 
 func main() {
-	flag.StringVar(&flagRunAddress, "a", ":8080", "address and port to run server")
+	flag.StringVar(&flagRunAddress, "a", "localhost:8080", "address and port to run server")
 	flag.Parse()
+
+	if envRunAddress := os.Getenv("ADDRESS"); envRunAddress != "" {
+		flagRunAddress = envRunAddress
+	}
 
 	router := chi.NewRouter()
 

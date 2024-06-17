@@ -2,10 +2,18 @@ package main
 
 import (
 	"flag"
+	"github.com/caarlos0/env"
+	"log"
 	"metrics/internal/utils"
 	"runtime"
 	"time"
 )
+
+type Config struct {
+	serverAddress  string `env:"ADDRESS"`
+	pollInterval   int64  `env:"REPORT_INTERVAL"`
+	reportInterval int64  `env:"POLL_INTERVAL"`
+}
 
 var (
 	flagServerAddress  string
@@ -49,10 +57,18 @@ var counterMetrics = map[string]int64{
 }
 
 func main() {
-	flag.StringVar(&flagServerAddress, "a", "http://localhost:8080", "address of the HTTP server endpoint (default localhost:8080)")
-	flag.Int64Var(&flagPollInterval, "p", 2, "frequency of sending metrics to the server (default 10 seconds)")
-	flag.Int64Var(&flagReportInterval, "r", 10, "frequency of sending metrics to the server (default 10 seconds)")
+	var cfg Config
+
+	flag.StringVar(&cfg.serverAddress, "a", "http://localhost:8080", "address of the HTTP server endpoint (default localhost:8080)")
+	flag.Int64Var(&cfg.pollInterval, "p", 2, "frequency of sending metrics to the server (default 10 seconds)")
+	flag.Int64Var(&cfg.reportInterval, "r", 10, "frequency of sending metrics to the server (default 10 seconds)")
 	flag.Parse()
+
+	err := env.Parse(&cfg)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	utils.ValidateFlags(&flagPollInterval, &flagReportInterval, &flagServerAddress)
 
 	var memStats runtime.MemStats
