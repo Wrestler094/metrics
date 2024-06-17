@@ -1,46 +1,63 @@
 package handlers
 
 import (
+	"fmt"
+	"github.com/go-chi/chi/v5"
+	"io"
 	"metrics/internal/storage"
+	"metrics/internal/utils"
 	"net/http"
 	"strconv"
-	"strings"
 )
+
+func GetMetricsHandler(res http.ResponseWriter, req *http.Request) {
+	res.Header().Set("Content-Type", "text/html; charset=utf-8")
+	gaugeMetrics, counterMetrics := storage.Storage.GetMetrics()
+	html := utils.GetHTMLWithMetrics(gaugeMetrics, counterMetrics)
+	io.WriteString(res, html)
+}
+
+func GetMetricValueHandler(res http.ResponseWriter, req *http.Request) {
+	res.Header().Set("Content-Type", "text/plain; charset=utf-8")
+
+	metricType := chi.URLParam(req, "type")
+	metricName := chi.URLParam(req, "name")
+
+	switch metricType {
+	case "gauge":
+		{
+			val, ok := storage.Storage.GetGaugeMetric(metricName)
+			if !ok {
+				http.Error(res, "Unknown metric name", http.StatusNotFound)
+				return
+			}
+
+			io.WriteString(res, fmt.Sprintf("%f\n", val))
+		}
+	case "counter":
+		{
+			val, ok := storage.Storage.GetCounterMetric(metricName)
+			if !ok {
+				http.Error(res, "Unknown metric name", http.StatusNotFound)
+				return
+			}
+
+			io.WriteString(res, strconv.FormatInt(val, 10))
+		}
+	default:
+		{
+			http.Error(res, "Unknown metric type", http.StatusNotFound)
+			return
+		}
+	}
+}
 
 func UpdateMetricHandler(res http.ResponseWriter, req *http.Request) {
 	res.Header().Set("Content-Type", "text/plain; charset=utf-8")
 
-	if req.Method != http.MethodPost {
-		http.Error(res, "Only POST requests are allowed!", http.StatusMethodNotAllowed)
-		return
-	}
-
-	urlParts := strings.Split(req.URL.Path, "/")
-	urlParts = urlParts[2:]
-
-	if len(urlParts) < 1 || urlParts[0] == "" {
-		http.Error(res, "Request without metric type", http.StatusNotFound)
-		return
-	}
-
-	if len(urlParts) < 2 || urlParts[1] == "" {
-		http.Error(res, "Request without metric name", http.StatusNotFound)
-		return
-	}
-
-	if len(urlParts) < 3 || urlParts[2] == "" {
-		http.Error(res, "Request without metric value", http.StatusNotFound)
-		return
-	}
-
-	if len(urlParts) != 3 {
-		http.Error(res, "Invalid request", http.StatusBadRequest)
-		return
-	}
-
-	metricType := strings.ToLower(urlParts[0])
-	metricName := urlParts[1]
-	metricValue := urlParts[2]
+	metricType := chi.URLParam(req, "type")
+	metricName := chi.URLParam(req, "name")
+	metricValue := chi.URLParam(req, "value")
 
 	switch metricType {
 	case "gauge":
@@ -51,7 +68,7 @@ func UpdateMetricHandler(res http.ResponseWriter, req *http.Request) {
 				return
 			}
 
-			storage.Storage.ChangeGauge(metricName, gaugeValue)
+			storage.Storage.SetGaugeMetric(metricName, gaugeValue)
 		}
 	case "counter":
 		{
@@ -61,7 +78,7 @@ func UpdateMetricHandler(res http.ResponseWriter, req *http.Request) {
 				return
 			}
 
-			storage.Storage.IncreaseCounter(metricName, counterValue)
+			storage.Storage.SetCounterMetric(metricName, counterValue)
 		}
 	default:
 		{

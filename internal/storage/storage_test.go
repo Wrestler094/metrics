@@ -47,7 +47,7 @@ func TestChangeGauge(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			test.storage.ChangeGauge(test.metric.metricName, test.metric.value)
+			test.storage.SetGaugeMetric(test.metric.metricName, test.metric.value)
 
 			assert.Contains(t, test.storage.metrics.gauge, test.metric.metricName)
 			assert.Equal(t, test.metric.value, test.storage.metrics.gauge[test.metric.metricName])
@@ -100,7 +100,7 @@ func TestIncreaseCounter(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			test.storage.IncreaseCounter(test.metric.metricName, test.metric.value)
+			test.storage.SetCounterMetric(test.metric.metricName, test.metric.value)
 
 			assert.Contains(t, test.storage.metrics.counter, test.metric.metricName)
 			assert.Equal(t, test.want, test.storage.metrics.counter[test.metric.metricName])
