@@ -6,6 +6,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"log"
 	"metrics/internal/handlers"
+	"metrics/internal/utils"
 	"net/http"
 	"os"
 )
@@ -19,6 +20,8 @@ func main() {
 	if envRunAddress := os.Getenv("ADDRESS"); envRunAddress != "" {
 		flagRunAddress = envRunAddress
 	}
+
+	utils.ValidateServerAddress(&flagRunAddress)
 
 	router := chi.NewRouter()
 
