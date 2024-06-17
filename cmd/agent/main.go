@@ -15,12 +15,6 @@ type Config struct {
 	reportInterval int64  `env:"POLL_INTERVAL"`
 }
 
-var (
-	flagServerAddress  string
-	flagPollInterval   int64
-	flagReportInterval int64
-)
-
 var gaugeMetrics = map[string]float64{
 	"Alloc":         0,
 	"BuckHashSys":   0,
@@ -69,10 +63,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	utils.ValidateFlags(&flagPollInterval, &flagReportInterval, &flagServerAddress)
+	utils.ValidateFlags(&cfg.pollInterval, &cfg.reportInterval, &cfg.serverAddress)
 
 	var memStats runtime.MemStats
-	var sendInterval = flagReportInterval / flagPollInterval
+	var sendInterval = cfg.reportInterval / cfg.pollInterval
 
 	for {
 		runtime.ReadMemStats(&memStats)
@@ -81,10 +75,10 @@ func main() {
 		if counterMetrics["PollCount"] != sendInterval {
 			counterMetrics["PollCount"]++
 		} else {
-			utils.SendData(gaugeMetrics, counterMetrics, flagServerAddress)
+			utils.SendData(gaugeMetrics, counterMetrics, cfg.serverAddress)
 			counterMetrics["PollCount"] = 1
 		}
 
-		time.Sleep(time.Duration(flagPollInterval) * time.Second)
+		time.Sleep(time.Duration(cfg.pollInterval) * time.Second)
 	}
 }
