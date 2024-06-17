@@ -3,6 +3,7 @@ package handlers
 import (
 	"github.com/go-chi/chi/v5"
 	"io"
+	"log"
 	"metrics/internal/storage"
 	"metrics/internal/utils"
 	"net/http"
@@ -14,7 +15,10 @@ func GetMetricsHandler(res http.ResponseWriter, req *http.Request) {
 	res.Header().Set("Content-Type", "text/html; charset=utf-8")
 	gaugeMetrics, counterMetrics := storage.Storage.GetMetrics()
 	html := utils.GetHTMLWithMetrics(gaugeMetrics, counterMetrics)
-	io.WriteString(res, html)
+	_, err := io.WriteString(res, html)
+	if err != nil {
+		log.Fatalf("io.WriteString error %v", err)
+	}
 }
 
 func GetMetricValueHandler(res http.ResponseWriter, req *http.Request) {
@@ -36,7 +40,10 @@ func GetMetricValueHandler(res http.ResponseWriter, req *http.Request) {
 			output = strings.TrimRight(output, "0")
 			output = strings.TrimRight(output, ".")
 
-			io.WriteString(res, output)
+			_, err := io.WriteString(res, output)
+			if err != nil {
+				log.Fatalf("io.WriteString error %v", err)
+			}
 		}
 	case "counter":
 		{
@@ -46,7 +53,10 @@ func GetMetricValueHandler(res http.ResponseWriter, req *http.Request) {
 				return
 			}
 
-			io.WriteString(res, strconv.FormatInt(val, 10))
+			_, err := io.WriteString(res, strconv.FormatInt(val, 10))
+			if err != nil {
+				log.Fatalf("io.WriteString error %v", err)
+			}
 		}
 	default:
 		{

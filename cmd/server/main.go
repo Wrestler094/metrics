@@ -23,7 +23,7 @@ func main() {
 	router := chi.NewRouter()
 
 	router.Use(middleware.Logger)
-	//router.Use(middleware.Recoverer)
+	router.Use(middleware.Recoverer)
 
 	router.Get("/", handlers.GetMetricsHandler)
 	router.Get("/value/{type}/{name}", handlers.GetMetricValueHandler)
