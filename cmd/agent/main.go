@@ -74,7 +74,7 @@ func main() {
 		if counterMetrics["PollCount"] != sendInterval {
 			counterMetrics["PollCount"]++
 		} else {
-			utils.SendData(gaugeMetrics, counterMetrics, flagServerAddress)
+			utils.SendData(gaugeMetrics, counterMetrics, "http://localhost:8080")
 			counterMetrics["PollCount"] = 1
 		}
 
