@@ -1,11 +1,12 @@
 package utils
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 func ValidateServerAddress(serverAddress *string) {
-	if !(strings.HasPrefix(*serverAddress, "http://")) {
-		*serverAddress = "http://" + *serverAddress
-	}
+	fmt.Println(serverAddress)
 }
 
 func ValidateFlags(pollInterval *int64, reportInterval *int64, serverAddress *string) {
@@ -17,5 +18,7 @@ func ValidateFlags(pollInterval *int64, reportInterval *int64, serverAddress *st
 		*reportInterval = 10
 	}
 
-	ValidateServerAddress(serverAddress)
+	if !(strings.HasPrefix(*serverAddress, "http://")) {
+		*serverAddress = "http://" + *serverAddress
+	}
 }
