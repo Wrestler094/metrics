@@ -10,9 +10,9 @@ import (
 )
 
 type Config struct {
-	serverAddress  string `env:"ADDRESS"`
-	pollInterval   int64  `env:"REPORT_INTERVAL"`
-	reportInterval int64  `env:"POLL_INTERVAL"`
+	ServerAddress  string `env:"ADDRESS"`
+	PollInterval   int64  `env:"REPORT_INTERVAL"`
+	ReportInterval int64  `env:"POLL_INTERVAL"`
 }
 
 var gaugeMetrics = map[string]float64{
@@ -53,9 +53,9 @@ var counterMetrics = map[string]int64{
 func main() {
 	var cfg Config
 
-	flag.StringVar(&cfg.serverAddress, "a", "http://localhost:8080", "address of the HTTP server endpoint (default localhost:8080)")
-	flag.Int64Var(&cfg.pollInterval, "p", 2, "frequency of sending metrics to the server (default 10 seconds)")
-	flag.Int64Var(&cfg.reportInterval, "r", 10, "frequency of sending metrics to the server (default 10 seconds)")
+	flag.StringVar(&cfg.ServerAddress, "a", "http://localhost:8080", "address of the HTTP server endpoint (default localhost:8080)")
+	flag.Int64Var(&cfg.PollInterval, "p", 2, "frequency of sending metrics to the server (default 10 seconds)")
+	flag.Int64Var(&cfg.ReportInterval, "r", 10, "frequency of sending metrics to the server (default 10 seconds)")
 	flag.Parse()
 
 	err := env.Parse(&cfg)
@@ -63,10 +63,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	utils.ValidateFlags(&cfg.pollInterval, &cfg.reportInterval, &cfg.serverAddress)
+	utils.ValidateFlags(&cfg.PollInterval, &cfg.ReportInterval, &cfg.ServerAddress)
 
 	var memStats runtime.MemStats
-	var sendInterval = cfg.reportInterval / cfg.pollInterval
+	var sendInterval = cfg.ReportInterval / cfg.PollInterval
 
 	for {
 		runtime.ReadMemStats(&memStats)
@@ -75,10 +75,10 @@ func main() {
 		if counterMetrics["PollCount"] != sendInterval {
 			counterMetrics["PollCount"]++
 		} else {
-			utils.SendData(gaugeMetrics, counterMetrics, cfg.serverAddress)
+			utils.SendData(gaugeMetrics, counterMetrics, cfg.ServerAddress)
 			counterMetrics["PollCount"] = 1
 		}
 
-		time.Sleep(time.Duration(cfg.pollInterval) * time.Second)
+		time.Sleep(time.Duration(cfg.PollInterval) * time.Second)
 	}
 }
