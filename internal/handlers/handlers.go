@@ -1,13 +1,13 @@
 package handlers
 
 import (
-	"fmt"
 	"github.com/go-chi/chi/v5"
 	"io"
 	"metrics/internal/storage"
 	"metrics/internal/utils"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 func GetMetricsHandler(res http.ResponseWriter, req *http.Request) {
@@ -32,7 +32,11 @@ func GetMetricValueHandler(res http.ResponseWriter, req *http.Request) {
 				return
 			}
 
-			io.WriteString(res, fmt.Sprintf("%.3f\n", val))
+			output := strconv.FormatFloat(val, 'f', 3, 64)
+			output = strings.TrimRight(output, "0")
+			output = strings.TrimRight(output, ".")
+
+			io.WriteString(res, output)
 		}
 	case "counter":
 		{
