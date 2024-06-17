@@ -6,9 +6,9 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"log"
 	"metrics/internal/handlers"
-	"metrics/internal/utils"
 	"net/http"
 	"os"
+	"strings"
 )
 
 var flagRunAddress string
@@ -21,7 +21,7 @@ func main() {
 		flagRunAddress = envRunAddress
 	}
 
-	utils.ValidateServerAddress(&flagRunAddress)
+	flagRunAddress = strings.TrimSuffix(flagRunAddress, "http://")
 
 	router := chi.NewRouter()
 

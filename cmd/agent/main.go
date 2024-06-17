@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"github.com/caarlos0/env"
 	"log"
 	"metrics/internal/utils"
@@ -65,7 +64,7 @@ func main() {
 	}
 
 	utils.ValidateFlags(&cfg.PollInterval, &cfg.ReportInterval, &cfg.ServerAddress)
-	fmt.Print(cfg.ServerAddress)
+
 	var memStats runtime.MemStats
 	var sendInterval = cfg.ReportInterval / cfg.PollInterval
 
