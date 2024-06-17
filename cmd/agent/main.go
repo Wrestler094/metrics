@@ -50,7 +50,7 @@ var counterMetrics = map[string]int64{
 }
 
 func main() {
-	flag.StringVar(&flagServerAddress, "a", "http://localhost:8080", "address of the HTTP server endpoint (default localhost:8080)")
+	flag.StringVar(&flagServerAddress, "a", "http://127.0.0.1:8080", "address of the HTTP server endpoint (default localhost:8080)")
 	flag.Int64Var(&flagPollInterval, "p", 2, "frequency of sending metrics to the server (default 10 seconds)")
 	flag.Int64Var(&flagReportInterval, "r", 10, "frequency of sending metrics to the server (default 10 seconds)")
 	flag.Parse()
