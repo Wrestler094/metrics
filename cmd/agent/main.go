@@ -53,7 +53,7 @@ func main() {
 	flag.Int64Var(&flagPollInterval, "p", 2, "frequency of sending metrics to the server (default 10 seconds)")
 	flag.Int64Var(&flagReportInterval, "r", 10, "frequency of sending metrics to the server (default 10 seconds)")
 	flag.Parse()
-	utils.ValidateFlags(flagPollInterval, flagReportInterval, flagServerAddress)
+	utils.ValidateFlags(&flagPollInterval, &flagReportInterval, &flagServerAddress)
 
 	var memStats runtime.MemStats
 	var sendInterval = flagReportInterval / flagPollInterval
