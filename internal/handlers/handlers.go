@@ -32,7 +32,7 @@ func GetMetricValueHandler(res http.ResponseWriter, req *http.Request) {
 				return
 			}
 
-			io.WriteString(res, fmt.Sprintf("%f\n", val))
+			io.WriteString(res, fmt.Sprintf("%.3f\n", val))
 		}
 	case "counter":
 		{
