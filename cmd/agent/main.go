@@ -1,14 +1,17 @@
 package main
 
 import (
+	"flag"
 	"metrics/internal/utils"
 	"runtime"
 	"time"
 )
 
-const pollInterval = 2
-const reportInterval = 10
-const server = "http://localhost:8080"
+var (
+	flagServerAddress  string
+	flagPollInterval   int64
+	flagReportInterval int64
+)
 
 var gaugeMetrics = map[string]float64{
 	"Alloc":         0,
@@ -46,8 +49,21 @@ var counterMetrics = map[string]int64{
 }
 
 func main() {
+	flag.StringVar(&flagServerAddress, "a", "localhost:8080", "address of the HTTP server endpoint (default localhost:8080)")
+	flag.Int64Var(&flagPollInterval, "p", 2, "frequency of sending metrics to the server (default 10 seconds)")
+	flag.Int64Var(&flagReportInterval, "r", 10, "frequency of sending metrics to the server (default 10 seconds)")
+	flag.Parse()
+
+	if flagPollInterval < 1 {
+		flagPollInterval = 2
+	}
+
+	if flagReportInterval < 1 {
+		flagReportInterval = 10
+	}
+
 	var memStats runtime.MemStats
-	var sendInterval int64 = reportInterval / pollInterval
+	var sendInterval = flagReportInterval / flagPollInterval
 
 	for {
 		runtime.ReadMemStats(&memStats)
@@ -56,10 +72,10 @@ func main() {
 		if counterMetrics["PollCount"] != sendInterval {
 			counterMetrics["PollCount"]++
 		} else {
-			utils.SendData(gaugeMetrics, counterMetrics, server)
+			utils.SendData(gaugeMetrics, counterMetrics, flagServerAddress)
 			counterMetrics["PollCount"] = 1
 		}
 
-		time.Sleep(pollInterval * time.Second)
+		time.Sleep(time.Duration(flagPollInterval) * time.Second)
 	}
 }
