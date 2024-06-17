@@ -6,7 +6,7 @@ import (
 )
 
 func ValidateServerAddress(serverAddress *string) {
-	fmt.Println(serverAddress)
+	fmt.Println(*serverAddress)
 }
 
 func ValidateFlags(pollInterval *int64, reportInterval *int64, serverAddress *string) {
