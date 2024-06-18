@@ -43,4 +43,5 @@ func PostMetricHandler(res http.ResponseWriter, req *http.Request) {
 	}
 
 	res.WriteHeader(http.StatusOK)
+	res.Write([]byte("OK"))
 }
