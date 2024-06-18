@@ -16,14 +16,12 @@ var flagRunAddress string
 func main() {
 	flag.StringVar(&flagRunAddress, "a", "localhost:8080", "address and port to run server")
 	flag.Parse()
-
-	envRunAddressTMP := os.Getenv("ADDRESS")
-	fmt.Printf(envRunAddressTMP)
+	os.Setenv("ADDRESS", ":33443")
 
 	if envRunAddress := os.Getenv("ADDRESS"); envRunAddress != "" {
 		flagRunAddress = envRunAddress
 	}
-
+	fmt.Printf(flagRunAddress)
 	router := chi.NewRouter()
 
 	router.Use(middleware.Logger)
