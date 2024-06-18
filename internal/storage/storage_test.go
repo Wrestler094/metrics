@@ -19,8 +19,8 @@ func TestChangeGauge(t *testing.T) {
 		{
 			name: "Write gauge metric in empty storage",
 			storage: MemStorage{
-				gauge:   map[string]float64{},
-				counter: map[string]int64{},
+				Gauge:   map[string]float64{},
+				Counter: map[string]int64{},
 			},
 			metric: metric{
 				metricName: "testGauge",
@@ -29,10 +29,10 @@ func TestChangeGauge(t *testing.T) {
 		}, {
 			name: "Write gauge metric in existed metric",
 			storage: MemStorage{
-				gauge: map[string]float64{
+				Gauge: map[string]float64{
 					"testGauge": 200,
 				},
-				counter: map[string]int64{},
+				Counter: map[string]int64{},
 			},
 			metric: metric{
 				metricName: "testGauge",
@@ -45,8 +45,8 @@ func TestChangeGauge(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			test.storage.SetGaugeMetric(test.metric.metricName, test.metric.value)
 
-			assert.Contains(t, test.storage.gauge, test.metric.metricName)
-			assert.Equal(t, test.metric.value, test.storage.gauge[test.metric.metricName])
+			assert.Contains(t, test.storage.Gauge, test.metric.metricName)
+			assert.Equal(t, test.metric.value, test.storage.Gauge[test.metric.metricName])
 		})
 	}
 }
@@ -66,8 +66,8 @@ func TestIncreaseCounter(t *testing.T) {
 		{
 			name: "Write counter metric in empty storage",
 			storage: MemStorage{
-				gauge:   map[string]float64{},
-				counter: map[string]int64{},
+				Gauge:   map[string]float64{},
+				Counter: map[string]int64{},
 			},
 			metric: metric{
 				metricName: "testCounter",
@@ -77,8 +77,8 @@ func TestIncreaseCounter(t *testing.T) {
 		}, {
 			name: "Write counter metric in existed metric",
 			storage: MemStorage{
-				gauge: map[string]float64{},
-				counter: map[string]int64{
+				Gauge: map[string]float64{},
+				Counter: map[string]int64{
 					"testCounter": 200,
 				},
 			},
@@ -94,8 +94,8 @@ func TestIncreaseCounter(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			test.storage.SetCounterMetric(test.metric.metricName, test.metric.value)
 
-			assert.Contains(t, test.storage.counter, test.metric.metricName)
-			assert.Equal(t, test.want, test.storage.counter[test.metric.metricName])
+			assert.Contains(t, test.storage.Counter, test.metric.metricName)
+			assert.Equal(t, test.want, test.storage.Counter[test.metric.metricName])
 		})
 	}
 }
