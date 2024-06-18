@@ -4,11 +4,9 @@ import (
 	"flag"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"log"
 	"metrics/internal/handlers"
 	"net/http"
 	"os"
-	"strings"
 )
 
 var flagRunAddress string
@@ -21,10 +19,6 @@ func main() {
 		flagRunAddress = envRunAddress
 	}
 
-	flagRunAddress = strings.TrimPrefix(flagRunAddress, "http://")
-	flagRunAddress = strings.TrimPrefix(flagRunAddress, "https://")
-	flagRunAddress = strings.TrimSuffix(flagRunAddress, ":")
-
 	router := chi.NewRouter()
 
 	router.Use(middleware.Logger)
@@ -34,5 +28,7 @@ func main() {
 	router.Get("/value/{type}/{name}", handlers.GetMetricValueHandler)
 	router.Post("/update/{type}/{name}/{value}", handlers.UpdateMetricHandler)
 
-	log.Fatalln(http.ListenAndServe(flagRunAddress, router))
+	if err := http.ListenAndServe(flagRunAddress, router); err != nil {
+		http.ListenAndServe(flagRunAddress, router)
+	}
 }

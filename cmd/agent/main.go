@@ -2,6 +2,8 @@ package main
 
 import (
 	"flag"
+	"github.com/caarlos0/env"
+	"log"
 	"metrics/internal/utils"
 	"runtime"
 	"time"
@@ -56,10 +58,10 @@ func main() {
 	flag.Int64Var(&cfg.ReportInterval, "r", 10, "frequency of sending metrics to the server (default 10 seconds)")
 	flag.Parse()
 
-	//err := env.Parse(&cfg)
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
+	err := env.Parse(&cfg)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	utils.ValidateFlags(&cfg.PollInterval, &cfg.ReportInterval, &cfg.ServerAddress)
 
