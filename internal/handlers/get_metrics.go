@@ -7,6 +7,7 @@ import (
 
 func (bh *BaseHandler) getMetricsHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
+	r.Close = true
 	gaugeMetrics, counterMetrics := bh.storage.GetMetrics()
 	html := utils.GetHTMLWithMetrics(gaugeMetrics, counterMetrics)
 	w.WriteHeader(http.StatusOK)
