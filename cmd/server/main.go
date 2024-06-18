@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"metrics/internal/handlers"
@@ -18,6 +19,9 @@ func main() {
 	if envRunAddress := os.Getenv("ADDRESS"); envRunAddress != "" {
 		flagRunAddress = envRunAddress
 	}
+
+	fmt.Println(os.Getenv("ADDRESS"))
+	fmt.Println(flagRunAddress)
 
 	router := chi.NewRouter()
 
