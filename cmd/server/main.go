@@ -15,7 +15,7 @@ func main() {
 	flag.StringVar(&flagRunAddress, "a", "localhost:8080", "address and port to run server")
 	flag.Parse()
 
-	if envRunAddress := os.Getenv("ADDRESS"); envRunAddress != "" {
+	if envRunAddress := os.Getenv("SERVER_ADDRESS"); envRunAddress != "" {
 		flagRunAddress = envRunAddress
 	}
 
