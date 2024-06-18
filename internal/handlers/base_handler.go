@@ -1,9 +1,9 @@
 package handlers
 
 import (
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
 	"metrics/internal/storage"
+
+	"github.com/go-chi/chi/v5"
 )
 
 type BaseHandler struct {
@@ -16,8 +16,8 @@ func NewBaseHandler(storage storage.Repository) *BaseHandler {
 
 func (bh *BaseHandler) Router() *chi.Mux {
 	router := chi.NewRouter()
-	router.Use(middleware.Logger)
-	router.Use(middleware.Recoverer)
+	// router.Use(middleware.Logger)
+	// router.Use(middleware.Recoverer)
 
 	router.Get("/", bh.getMetricsHandler)
 	router.Get("/value/{type}/{name}", bh.getMetricValueHandler)

@@ -4,7 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"metrics/internal/handlers"
-	_storage "metrics/internal/storage"
+	storage "metrics/internal/storage"
 	"net/http"
 	"os"
 )
@@ -19,8 +19,8 @@ func main() {
 		flagRunAddress = envRunAddress
 	}
 
-	var storage _storage.Repository = _storage.NewMemStorage()
-	baseHandler := handlers.NewBaseHandler(storage)
+	rep := storage.NewMemStorage()
+	baseHandler := handlers.NewBaseHandler(rep)
 	router := baseHandler.Router()
 
 	fmt.Printf("Env Address: %s\n", os.Getenv("ADDRESS"))
