@@ -22,7 +22,7 @@ func (bh *BaseHandler) postMetricHandler(w http.ResponseWriter, r *http.Request)
 				return
 			}
 
-			bh.storage.SetGaugeMetric(metricName, gaugeValue)
+			bh.Storage.SetGaugeMetric(metricName, gaugeValue)
 			w.WriteHeader(http.StatusOK)
 			w.Write([]byte("OK"))
 		}
@@ -34,7 +34,7 @@ func (bh *BaseHandler) postMetricHandler(w http.ResponseWriter, r *http.Request)
 				return
 			}
 
-			bh.storage.SetCounterMetric(metricName, counterValue)
+			bh.Storage.SetCounterMetric(metricName, counterValue)
 			w.WriteHeader(http.StatusOK)
 			w.Write([]byte("OK"))
 		}
