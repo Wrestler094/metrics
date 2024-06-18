@@ -7,7 +7,7 @@ import (
 
 func sendGaugeMetric(server string, k string, v float64) {
 	url := fmt.Sprintf("%s/update/gauge/%s/%f", server, k, v)
-	resp, err := http.Post(url, "text/plain; charset=utf-8", nil)
+	resp, err := http.Post(url, "text/plain", nil)
 	if err != nil {
 		fmt.Printf("Metric %s sent with Error %s\n", k, err)
 	} else {
@@ -17,7 +17,7 @@ func sendGaugeMetric(server string, k string, v float64) {
 
 func sendCounterMetric(server string, k string, v int64) {
 	url := fmt.Sprintf("%s/update/counter/%s/%d", server, k, v)
-	resp, err := http.Post(url, "text/plain; charset=utf-8", nil)
+	resp, err := http.Post(url, "text/plain", nil)
 	if err != nil {
 		fmt.Printf("Metric %s sent with Error %s\n", k, err)
 	} else {

@@ -29,7 +29,7 @@ func TestCollectData(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			CollectData(test.args.memStats, test.args.gaugeMetrics)
+			CollectData(test.args.memStats, &test.args.gaugeMetrics)
 			assert.NotEqual(t, 0.0, test.args.gaugeMetrics["RandomValue"], "Random value should be set")
 		})
 	}
