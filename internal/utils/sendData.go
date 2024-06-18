@@ -3,10 +3,11 @@ package utils
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 )
 
 func sendGaugeMetric(server string, k string, v float64) {
-	url := fmt.Sprintf("%s/update/gauge/%s/%f", server, k, v)
+	url := fmt.Sprintf("%s/update/gauge/%s/%f", server, k, strconv.FormatFloat(v, 'f', -1, 64))
 	resp, err := http.Post(url, "text/plain", nil)
 	if err != nil {
 		fmt.Printf("Metric %s sent with Error %s\n", k, err)
