@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"log"
@@ -15,6 +16,9 @@ var flagRunAddress string
 func main() {
 	flag.StringVar(&flagRunAddress, "a", "localhost:8080", "address and port to run server")
 	flag.Parse()
+
+	envRunAddressTMP := os.Getenv("ADDRESS")
+	fmt.Printf(envRunAddressTMP)
 
 	if envRunAddress := os.Getenv("ADDRESS"); envRunAddress != "" {
 		flagRunAddress = envRunAddress
