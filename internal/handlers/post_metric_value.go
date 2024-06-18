@@ -17,13 +17,13 @@ func (bh *BaseHandler) postMetricHandler(w http.ResponseWriter, r *http.Request)
 	switch metricType {
 	case "gauge":
 		{
-			//gaugeValue, err := strconv.ParseFloat(metricValue, 64)
-			//if err != nil {
-			//	http.Error(w, "Invalid metric value", http.StatusBadRequest)
-			//	return
-			//}
+			gaugeValue, err := strconv.ParseFloat(metricValue, 64)
+			if err != nil {
+				http.Error(w, "Invalid metric value", http.StatusBadRequest)
+				return
+			}
 
-			bh.storage.SetGaugeMetric(metricName, 3.333)
+			bh.storage.SetGaugeMetric(metricName, gaugeValue)
 			w.WriteHeader(http.StatusOK)
 			w.Write([]byte("OK"))
 		}
