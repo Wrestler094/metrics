@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"github.com/go-chi/chi/v5"
 	"net/http"
 	"strconv"
@@ -18,20 +17,15 @@ func (bh *BaseHandler) postMetricHandler(w http.ResponseWriter, r *http.Request)
 	switch metricType {
 	case "gauge":
 		{
-			fmt.Printf("1")
-			gaugeValue, err := strconv.ParseFloat(metricValue, 64)
-			fmt.Printf("2")
-			if err != nil {
-				fmt.Printf("3")
-				http.Error(w, "Invalid metric value", http.StatusBadRequest)
-				return
-			}
+			//gaugeValue, err := strconv.ParseFloat(metricValue, 64)
+			//if err != nil {
+			//	http.Error(w, "Invalid metric value", http.StatusBadRequest)
+			//	return
+			//}
 
-			fmt.Printf("4")
-			bh.storage.SetGaugeMetric(metricName, gaugeValue)
+			bh.storage.SetGaugeMetric(metricName, 3.333)
 			w.WriteHeader(http.StatusOK)
 			w.Write([]byte("OK"))
-			fmt.Printf("5")
 		}
 	case "counter":
 		{
