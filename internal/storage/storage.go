@@ -3,9 +3,9 @@ package storage
 type Repository interface {
 	GetMetrics() (*map[string]float64, *map[string]int64)
 	GetGaugeMetric(gaugeName string) (float64, bool)
-	SetGaugeMetric(gaugeName string, newValue float64)
+	SetGaugeMetric(gaugeName string, newValue float64) error
 	GetCounterMetric(metricName string) (int64, bool)
-	SetCounterMetric(metricName string, value int64)
+	SetCounterMetric(metricName string, value int64) error
 }
 
 type MemStorage struct {
@@ -29,8 +29,9 @@ func (ms *MemStorage) GetGaugeMetric(metricName string) (float64, bool) {
 	return res, ok
 }
 
-func (ms *MemStorage) SetGaugeMetric(gaugeName string, newValue float64) {
+func (ms *MemStorage) SetGaugeMetric(gaugeName string, newValue float64) error {
 	ms.Gauge[gaugeName] = newValue
+	return nil
 }
 
 func (ms *MemStorage) GetCounterMetric(metricName string) (int64, bool) {
@@ -38,7 +39,7 @@ func (ms *MemStorage) GetCounterMetric(metricName string) (int64, bool) {
 	return res, ok
 }
 
-func (ms *MemStorage) SetCounterMetric(metricName string, value int64) {
+func (ms *MemStorage) SetCounterMetric(metricName string, value int64) error {
 	res, ok := ms.Counter[metricName]
 
 	if !ok {
@@ -46,4 +47,6 @@ func (ms *MemStorage) SetCounterMetric(metricName string, value int64) {
 	} else {
 		ms.Counter[metricName] = res + value
 	}
+
+	return nil
 }
