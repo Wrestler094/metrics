@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"github.com/go-chi/chi/v5"
-	"io"
 	"metrics/internal/storage"
 	"net/http"
 	"strconv"
@@ -28,7 +27,8 @@ func GetMetricValueHandler(res http.ResponseWriter, req *http.Request) {
 			output = strings.TrimRight(output, "0")
 			output = strings.TrimRight(output, ".")
 
-			io.WriteString(res, output)
+			res.WriteHeader(http.StatusOK)
+			res.Write([]byte(output))
 		}
 	case "counter":
 		{
@@ -38,7 +38,8 @@ func GetMetricValueHandler(res http.ResponseWriter, req *http.Request) {
 				return
 			}
 
-			io.WriteString(res, strconv.FormatInt(val, 10))
+			res.WriteHeader(http.StatusOK)
+			res.Write([]byte(strconv.FormatInt(val, 10)))
 		}
 	default:
 		{
