@@ -13,9 +13,13 @@ type MemStorage struct {
 	counter map[string]int64
 }
 
-var Storage = MemStorage{
-	gauge:   map[string]float64{},
-	counter: map[string]int64{},
+var Storage = NewMemStorage()
+
+func NewMemStorage() *MemStorage {
+	return &MemStorage{
+		gauge:   make(map[string]float64),
+		counter: make(map[string]int64),
+	}
 }
 
 func (ms MemStorage) GetMetrics() (map[string]float64, map[string]int64) {
