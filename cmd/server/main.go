@@ -4,7 +4,6 @@ import (
 	"flag"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"log"
 	"metrics/internal/handlers"
 	"net/http"
 	"os"
@@ -29,5 +28,5 @@ func main() {
 	router.Get("/value/{type}/{name}", handlers.GetMetricValueHandler)
 	router.Post("/update/{type}/{name}/{value}", handlers.PostMetricHandler)
 
-	log.Fatal(http.ListenAndServe(flagRunAddress, router))
+	panic(http.ListenAndServe(flagRunAddress, router))
 }
