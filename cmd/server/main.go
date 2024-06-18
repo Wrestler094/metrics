@@ -32,5 +32,7 @@ func main() {
 	router.Get("/value/{type}/{name}", handlers.GetMetricValueHandler)
 	router.Post("/update/{type}/{name}/{value}", handlers.PostMetricHandler)
 
-	panic(http.ListenAndServe(flagRunAddress, router))
+	if err := http.ListenAndServe(flagRunAddress, router); err != nil {
+		panic(err)
+	}
 }
