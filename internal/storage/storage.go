@@ -1,7 +1,7 @@
 package storage
 
 type Repository interface {
-	GetMetrics() (map[string]float64, map[string]int64)
+	GetMetrics() (*map[string]float64, *map[string]int64)
 	GetGaugeMetric(gaugeName string) (float64, bool)
 	SetGaugeMetric(gaugeName string, newValue float64)
 	GetCounterMetric(metricName string) (int64, bool)
@@ -13,8 +13,6 @@ type MemStorage struct {
 	counter map[string]int64
 }
 
-var Storage = NewMemStorage()
-
 func NewMemStorage() *MemStorage {
 	return &MemStorage{
 		gauge:   make(map[string]float64),
@@ -22,25 +20,25 @@ func NewMemStorage() *MemStorage {
 	}
 }
 
-func (ms MemStorage) GetMetrics() (map[string]float64, map[string]int64) {
-	return ms.gauge, ms.counter
+func (ms *MemStorage) GetMetrics() (*map[string]float64, *map[string]int64) {
+	return &ms.gauge, &ms.counter
 }
 
-func (ms MemStorage) GetGaugeMetric(metricName string) (float64, bool) {
+func (ms *MemStorage) GetGaugeMetric(metricName string) (float64, bool) {
 	res, ok := ms.gauge[metricName]
 	return res, ok
 }
 
-func (ms MemStorage) SetGaugeMetric(gaugeName string, newValue float64) {
+func (ms *MemStorage) SetGaugeMetric(gaugeName string, newValue float64) {
 	ms.gauge[gaugeName] = newValue
 }
 
-func (ms MemStorage) GetCounterMetric(metricName string) (int64, bool) {
+func (ms *MemStorage) GetCounterMetric(metricName string) (int64, bool) {
 	res, ok := ms.counter[metricName]
 	return res, ok
 }
 
-func (ms MemStorage) SetCounterMetric(metricName string, value int64) {
+func (ms *MemStorage) SetCounterMetric(metricName string, value int64) {
 	res, ok := ms.counter[metricName]
 
 	if !ok {

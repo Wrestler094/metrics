@@ -3,9 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
 	"metrics/internal/handlers"
+	_storage "metrics/internal/storage"
 	"net/http"
 	"os"
 )
@@ -20,19 +19,14 @@ func main() {
 		flagRunAddress = envRunAddress
 	}
 
-	fmt.Println(os.Getenv("ADDRESS"))
-	fmt.Println(flagRunAddress)
+	var storage _storage.Repository = _storage.NewMemStorage()
+	baseHandler := handlers.NewBaseHandler(storage)
+	router := baseHandler.Router()
 
-	router := chi.NewRouter()
-
-	router.Use(middleware.Logger)
-	router.Use(middleware.Recoverer)
-
-	router.Get("/", handlers.GetMetricsHandler)
-	router.Get("/value/{type}/{name}", handlers.GetMetricValueHandler)
-	router.Post("/update/{type}/{name}/{value}", handlers.PostMetricHandler)
+	fmt.Printf("Env Address: %s\n", os.Getenv("ADDRESS"))
+	fmt.Printf("Starting server on %s\n", flagRunAddress)
 
 	if err := http.ListenAndServe(flagRunAddress, router); err != nil {
-		fmt.Println(err)
+		fmt.Printf("Server error - %s", err)
 	}
 }

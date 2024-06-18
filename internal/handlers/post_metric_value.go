@@ -2,46 +2,46 @@ package handlers
 
 import (
 	"github.com/go-chi/chi/v5"
-	"metrics/internal/storage"
 	"net/http"
 	"strconv"
 )
 
-func PostMetricHandler(res http.ResponseWriter, req *http.Request) {
-	res.Header().Set("Content-Type", "text/plain; charset=utf-8")
+func (bh *BaseHandler) postMetricHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 
-	metricType := chi.URLParam(req, "type")
-	metricName := chi.URLParam(req, "name")
-	metricValue := chi.URLParam(req, "value")
+	metricType := chi.URLParam(r, "type")
+	metricName := chi.URLParam(r, "name")
+	metricValue := chi.URLParam(r, "value")
 
 	switch metricType {
 	case "gauge":
 		{
 			gaugeValue, err := strconv.ParseFloat(metricValue, 64)
 			if err != nil {
-				http.Error(res, "Invalid metric value", http.StatusBadRequest)
+				http.Error(w, "Invalid metric value", http.StatusBadRequest)
 				return
 			}
 
-			storage.Storage.SetGaugeMetric(metricName, gaugeValue)
+			bh.storage.SetGaugeMetric(metricName, gaugeValue)
+			w.WriteHeader(http.StatusOK)
+			w.Write([]byte("OK"))
 		}
 	case "counter":
 		{
 			counterValue, err := strconv.ParseInt(metricValue, 10, 64)
 			if err != nil {
-				http.Error(res, "Invalid metric value", http.StatusBadRequest)
+				http.Error(w, "Invalid metric value", http.StatusBadRequest)
 				return
 			}
 
-			storage.Storage.SetCounterMetric(metricName, counterValue)
+			bh.storage.SetCounterMetric(metricName, counterValue)
+			w.WriteHeader(http.StatusOK)
+			w.Write([]byte("OK"))
 		}
 	default:
 		{
-			http.Error(res, "Invalid metric type", http.StatusBadRequest)
+			http.Error(w, "Invalid metric type", http.StatusBadRequest)
 			return
 		}
 	}
-
-	res.WriteHeader(http.StatusOK)
-	res.Write([]byte("OK"))
 }
