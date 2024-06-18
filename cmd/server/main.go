@@ -20,7 +20,7 @@ func main() {
 	if envRunAddress := os.Getenv("ADDRESS"); envRunAddress != "" {
 		flagRunAddress = envRunAddress
 	}
-	fmt.Printf("TEST", flagRunAddress)
+	fmt.Printf("TEST" + flagRunAddress)
 	router := chi.NewRouter()
 
 	router.Use(middleware.Logger)
