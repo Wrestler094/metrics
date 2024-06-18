@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"log"
@@ -20,7 +19,7 @@ func main() {
 	if envRunAddress := os.Getenv("ADDRESS"); envRunAddress != "" {
 		flagRunAddress = envRunAddress
 	}
-	fmt.Printf("TEST" + flagRunAddress)
+
 	router := chi.NewRouter()
 
 	router.Use(middleware.Logger)
@@ -28,7 +27,7 @@ func main() {
 
 	router.Get("/", handlers.GetMetricsHandler)
 	router.Get("/value/{type}/{name}", handlers.GetMetricValueHandler)
-	router.Post("/update/{type}/{name}/{value}", handlers.UpdateMetricHandler)
+	router.Post("/update/{type}/{name}/{value}", handlers.PostMetricHandler)
 
 	log.Fatal(http.ListenAndServe(flagRunAddress, router))
 }
