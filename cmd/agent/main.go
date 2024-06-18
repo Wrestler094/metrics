@@ -70,7 +70,7 @@ func main() {
 
 	for {
 		runtime.ReadMemStats(&memStats)
-		utils.CollectData(&memStats, gaugeMetrics)
+		utils.CollectData(&memStats, &gaugeMetrics)
 
 		if counterMetrics["PollCount"] != sendInterval {
 			counterMetrics["PollCount"]++
