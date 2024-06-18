@@ -9,7 +9,6 @@ import (
 
 func (bh *BaseHandler) getMetricValueHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain")
-	r.Close = true
 
 	metricType := chi.URLParam(r, "type")
 	metricName := chi.URLParam(r, "name")

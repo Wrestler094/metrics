@@ -67,16 +67,17 @@ func main() {
 
 	var memStats runtime.MemStats
 	var sendInterval = cfg.ReportInterval / cfg.PollInterval
+	var tick int64 = 0
 
 	for {
 		runtime.ReadMemStats(&memStats)
 		utils.CollectData(&memStats, &gaugeMetrics)
 
-		if counterMetrics["PollCount"] != sendInterval {
-			counterMetrics["PollCount"]++
+		if tick != sendInterval {
+			tick++
 		} else {
 			utils.SendData(gaugeMetrics, counterMetrics, cfg.ServerAddress)
-			counterMetrics["PollCount"] = 1
+			tick = 1
 		}
 
 		time.Sleep(time.Duration(cfg.PollInterval) * time.Second)
