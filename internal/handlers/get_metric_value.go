@@ -16,7 +16,7 @@ func (bh *BaseHandler) getMetricValueHandler(w http.ResponseWriter, r *http.Requ
 	switch metricType {
 	case "gauge":
 		{
-			val, ok := bh.storage.GetGaugeMetric(metricName)
+			val, ok := bh.Storage.GetGaugeMetric(metricName)
 			if !ok {
 				http.Error(w, "Unknown metric name", http.StatusNotFound)
 				return
@@ -31,7 +31,7 @@ func (bh *BaseHandler) getMetricValueHandler(w http.ResponseWriter, r *http.Requ
 		}
 	case "counter":
 		{
-			val, ok := bh.storage.GetCounterMetric(metricName)
+			val, ok := bh.Storage.GetCounterMetric(metricName)
 			if !ok {
 				http.Error(w, "Unknown metric name", http.StatusNotFound)
 				return

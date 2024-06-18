@@ -7,11 +7,11 @@ import (
 )
 
 type BaseHandler struct {
-	storage storage.Repository
+	Storage storage.Repository
 }
 
 func NewBaseHandler(storage storage.Repository) *BaseHandler {
-	return &BaseHandler{storage: storage}
+	return &BaseHandler{Storage: storage}
 }
 
 func (bh *BaseHandler) Router() *chi.Mux {

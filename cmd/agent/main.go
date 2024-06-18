@@ -76,7 +76,7 @@ func main() {
 		if tick != sendInterval {
 			tick++
 		} else {
-			utils.SendData(gaugeMetrics, counterMetrics, cfg.ServerAddress)
+			utils.SendData(&gaugeMetrics, &counterMetrics, &cfg.ServerAddress)
 			tick = 1
 		}
 
