@@ -9,41 +9,41 @@ type Repository interface {
 }
 
 type MemStorage struct {
-	gauge   map[string]float64
-	counter map[string]int64
+	Gauge   map[string]float64
+	Counter map[string]int64
 }
 
 func NewMemStorage() *MemStorage {
 	return &MemStorage{
-		gauge:   make(map[string]float64),
-		counter: make(map[string]int64),
+		Gauge:   make(map[string]float64),
+		Counter: make(map[string]int64),
 	}
 }
 
 func (ms *MemStorage) GetMetrics() (*map[string]float64, *map[string]int64) {
-	return &ms.gauge, &ms.counter
+	return &ms.Gauge, &ms.Counter
 }
 
 func (ms *MemStorage) GetGaugeMetric(metricName string) (float64, bool) {
-	res, ok := ms.gauge[metricName]
+	res, ok := ms.Gauge[metricName]
 	return res, ok
 }
 
 func (ms *MemStorage) SetGaugeMetric(gaugeName string, newValue float64) {
-	ms.gauge[gaugeName] = newValue
+	ms.Gauge[gaugeName] = newValue
 }
 
 func (ms *MemStorage) GetCounterMetric(metricName string) (int64, bool) {
-	res, ok := ms.counter[metricName]
+	res, ok := ms.Counter[metricName]
 	return res, ok
 }
 
 func (ms *MemStorage) SetCounterMetric(metricName string, value int64) {
-	res, ok := ms.counter[metricName]
+	res, ok := ms.Counter[metricName]
 
 	if !ok {
-		ms.counter[metricName] = value
+		ms.Counter[metricName] = value
 	} else {
-		ms.counter[metricName] = res + value
+		ms.Counter[metricName] = res + value
 	}
 }
