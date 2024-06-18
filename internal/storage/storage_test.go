@@ -19,10 +19,8 @@ func TestChangeGauge(t *testing.T) {
 		{
 			name: "Write gauge metric in empty storage",
 			storage: MemStorage{
-				metrics: MetricTypes{
-					gauge:   map[string]float64{},
-					counter: map[string]int64{},
-				},
+				gauge:   map[string]float64{},
+				counter: map[string]int64{},
 			},
 			metric: metric{
 				metricName: "testGauge",
@@ -31,12 +29,10 @@ func TestChangeGauge(t *testing.T) {
 		}, {
 			name: "Write gauge metric in existed metric",
 			storage: MemStorage{
-				metrics: MetricTypes{
-					gauge: map[string]float64{
-						"testGauge": 200,
-					},
-					counter: map[string]int64{},
+				gauge: map[string]float64{
+					"testGauge": 200,
 				},
+				counter: map[string]int64{},
 			},
 			metric: metric{
 				metricName: "testGauge",
@@ -49,8 +45,8 @@ func TestChangeGauge(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			test.storage.SetGaugeMetric(test.metric.metricName, test.metric.value)
 
-			assert.Contains(t, test.storage.metrics.gauge, test.metric.metricName)
-			assert.Equal(t, test.metric.value, test.storage.metrics.gauge[test.metric.metricName])
+			assert.Contains(t, test.storage.gauge, test.metric.metricName)
+			assert.Equal(t, test.metric.value, test.storage.gauge[test.metric.metricName])
 		})
 	}
 }
@@ -70,10 +66,8 @@ func TestIncreaseCounter(t *testing.T) {
 		{
 			name: "Write counter metric in empty storage",
 			storage: MemStorage{
-				metrics: MetricTypes{
-					gauge:   map[string]float64{},
-					counter: map[string]int64{},
-				},
+				gauge:   map[string]float64{},
+				counter: map[string]int64{},
 			},
 			metric: metric{
 				metricName: "testCounter",
@@ -83,11 +77,9 @@ func TestIncreaseCounter(t *testing.T) {
 		}, {
 			name: "Write counter metric in existed metric",
 			storage: MemStorage{
-				metrics: MetricTypes{
-					gauge: map[string]float64{},
-					counter: map[string]int64{
-						"testCounter": 200,
-					},
+				gauge: map[string]float64{},
+				counter: map[string]int64{
+					"testCounter": 200,
 				},
 			},
 			metric: metric{
@@ -102,8 +94,8 @@ func TestIncreaseCounter(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			test.storage.SetCounterMetric(test.metric.metricName, test.metric.value)
 
-			assert.Contains(t, test.storage.metrics.counter, test.metric.metricName)
-			assert.Equal(t, test.want, test.storage.metrics.counter[test.metric.metricName])
+			assert.Contains(t, test.storage.counter, test.metric.metricName)
+			assert.Equal(t, test.want, test.storage.counter[test.metric.metricName])
 		})
 	}
 }
