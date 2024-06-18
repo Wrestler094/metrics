@@ -4,6 +4,7 @@ import (
 	"flag"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"log"
 	"metrics/internal/handlers"
 	"net/http"
 	"os"
@@ -14,8 +15,8 @@ var flagRunAddress string
 func main() {
 	flag.StringVar(&flagRunAddress, "a", "localhost:8080", "address and port to run server")
 	flag.Parse()
-
-	if envRunAddress := os.Getenv("SERVER_ADDRESS"); envRunAddress != "" {
+	os.Setenv("ADDRESS", "39000")
+	if envRunAddress := os.Getenv("ADDRESS"); envRunAddress != "" {
 		flagRunAddress = envRunAddress
 	}
 
@@ -28,7 +29,5 @@ func main() {
 	router.Get("/value/{type}/{name}", handlers.GetMetricValueHandler)
 	router.Post("/update/{type}/{name}/{value}", handlers.UpdateMetricHandler)
 
-	if err := http.ListenAndServe(flagRunAddress, router); err != nil {
-		http.ListenAndServe(flagRunAddress, router)
-	}
+	log.Fatal(http.ListenAndServe(flagRunAddress, router))
 }
