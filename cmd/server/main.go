@@ -33,6 +33,6 @@ func main() {
 	router.Post("/update/{type}/{name}/{value}", handlers.PostMetricHandler)
 
 	if err := http.ListenAndServe(flagRunAddress, router); err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
 }
