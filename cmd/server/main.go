@@ -19,6 +19,10 @@ func main() {
 		flagRunAddress = envRunAddress
 	}
 
+	if flagRunAddress == "" {
+		flagRunAddress = ":8080"
+	}
+
 	router := chi.NewRouter()
 
 	router.Use(middleware.Logger)
