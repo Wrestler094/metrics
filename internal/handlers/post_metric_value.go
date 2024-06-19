@@ -22,11 +22,7 @@ func (bh *BaseHandler) postMetricHandler(w http.ResponseWriter, r *http.Request)
 				return
 			}
 
-			err = bh.Storage.SetGaugeMetric(metricName, gaugeValue)
-			if err != nil {
-				http.Error(w, "Failed to set gauge", http.StatusInternalServerError)
-				return
-			}
+			bh.Storage.SetGaugeMetric(metricName, gaugeValue)
 
 			w.WriteHeader(http.StatusOK)
 			w.Write([]byte("OK"))
@@ -39,11 +35,7 @@ func (bh *BaseHandler) postMetricHandler(w http.ResponseWriter, r *http.Request)
 				return
 			}
 
-			err = bh.Storage.SetCounterMetric(metricName, counterValue)
-			if err != nil {
-				http.Error(w, "Failed to set gauge", http.StatusInternalServerError)
-				return
-			}
+			bh.Storage.SetCounterMetric(metricName, counterValue)
 
 			w.WriteHeader(http.StatusOK)
 			w.Write([]byte("OK"))
