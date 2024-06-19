@@ -16,6 +16,20 @@ type Config struct {
 	ReportInterval int64  `env:"POLL_INTERVAL"`
 }
 
+func validateConfig(cfg Config) {
+	if cfg.PollInterval < 1 {
+		cfg.PollInterval = 2
+	}
+
+	if cfg.ReportInterval < 1 {
+		cfg.ReportInterval = 10
+	}
+
+	if !(strings.HasPrefix(cfg.ServerAddress, "http://")) {
+		cfg.ServerAddress = "http://" + cfg.ServerAddress
+	}
+}
+
 func main() {
 	var cfg Config
 
@@ -29,37 +43,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	if cfg.PollInterval < 1 {
-		cfg.PollInterval = 2
-	}
-
-	if cfg.ReportInterval < 1 {
-		cfg.ReportInterval = 10
-	}
-
-	if !(strings.HasPrefix(cfg.ServerAddress, "http://")) {
-		cfg.ServerAddress = "http://" + cfg.ServerAddress
-	}
-
-	log.Println("CFG: ", cfg)
-
-	//var memStats runtime.MemStats
-	//var sendInterval = cfg.ReportInterval / cfg.PollInterval
-	//var tick int64 = 0
-	//
-	//for {
-	//	runtime.ReadMemStats(&memStats)
-	//	utils.CollectData(&memStats, &gaugeMetrics)
-	//
-	//	if tick != sendInterval {
-	//		tick++
-	//	} else {
-	//		utils.SendData(&gaugeMetrics, &counterMetrics, &cfg.ServerAddress)
-	//		tick = 1
-	//	}
-	//
-	//	time.Sleep(time.Duration(cfg.PollInterval) * time.Second)
-	//}
+	validateConfig(cfg)
 
 	gaugeMetrics := make(map[string]float64)
 	counterMetrics := make(map[string]int64)
