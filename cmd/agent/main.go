@@ -16,7 +16,7 @@ type Config struct {
 	ReportInterval int64  `env:"POLL_INTERVAL"`
 }
 
-func validateConfig(cfg Config) {
+func validateConfig(cfg *Config) {
 	if cfg.PollInterval < 1 {
 		cfg.PollInterval = 2
 	}
@@ -43,7 +43,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	validateConfig(cfg)
+	validateConfig(&cfg)
 
 	gaugeMetrics := make(map[string]float64)
 	counterMetrics := make(map[string]int64)
