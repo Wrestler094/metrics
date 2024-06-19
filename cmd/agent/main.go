@@ -6,6 +6,7 @@ import (
 	"log"
 	"metrics/internal/utils"
 	"runtime"
+	"strings"
 	"time"
 )
 
@@ -13,41 +14,6 @@ type Config struct {
 	ServerAddress  string `env:"ADDRESS"`
 	PollInterval   int64  `env:"REPORT_INTERVAL"`
 	ReportInterval int64  `env:"POLL_INTERVAL"`
-}
-
-var gaugeMetrics = map[string]float64{
-	"Alloc":         0,
-	"BuckHashSys":   0,
-	"Frees":         0,
-	"GCCPUFraction": 0,
-	"GCSys":         0,
-	"HeapAlloc":     0,
-	"HeapIdle":      0,
-	"HeapInuse":     0,
-	"HeapObjects":   0,
-	"HeapReleased":  0,
-	"HeapSys":       0,
-	"LastGC":        0,
-	"Lookups":       0,
-	"MCacheInuse":   0,
-	"MCacheSys":     0,
-	"MSpanInuse":    0,
-	"MSpanSys":      0,
-	"Mallocs":       0,
-	"NextGC":        0,
-	"NumForcedGC":   0,
-	"NumGC":         0,
-	"OtherSys":      0,
-	"PauseTotalNs":  0,
-	"StackInuse":    0,
-	"StackSys":      0,
-	"Sys":           0,
-	"TotalAlloc":    0,
-	"RandomValue":   0,
-}
-
-var counterMetrics = map[string]int64{
-	"PollCount": 0,
 }
 
 func main() {
@@ -63,23 +29,56 @@ func main() {
 		log.Fatal(err)
 	}
 
-	utils.ValidateFlags(&cfg.PollInterval, &cfg.ReportInterval, &cfg.ServerAddress)
+	if cfg.PollInterval < 1 {
+		cfg.PollInterval = 2
+	}
 
-	var memStats runtime.MemStats
-	var sendInterval = cfg.ReportInterval / cfg.PollInterval
-	var tick int64 = 0
+	if cfg.ReportInterval < 1 {
+		cfg.ReportInterval = 10
+	}
 
-	for {
-		runtime.ReadMemStats(&memStats)
-		utils.CollectData(&memStats, &gaugeMetrics)
+	if !(strings.HasPrefix(cfg.ServerAddress, "http://")) {
+		cfg.ServerAddress = "http://" + cfg.ServerAddress
+	}
 
-		if tick != sendInterval {
-			tick++
-		} else {
-			utils.SendData(&gaugeMetrics, &counterMetrics, &cfg.ServerAddress)
-			tick = 1
+	log.Println("CFG: ", cfg)
+
+	//var memStats runtime.MemStats
+	//var sendInterval = cfg.ReportInterval / cfg.PollInterval
+	//var tick int64 = 0
+	//
+	//for {
+	//	runtime.ReadMemStats(&memStats)
+	//	utils.CollectData(&memStats, &gaugeMetrics)
+	//
+	//	if tick != sendInterval {
+	//		tick++
+	//	} else {
+	//		utils.SendData(&gaugeMetrics, &counterMetrics, &cfg.ServerAddress)
+	//		tick = 1
+	//	}
+	//
+	//	time.Sleep(time.Duration(cfg.PollInterval) * time.Second)
+	//}
+
+	gaugeMetrics := make(map[string]float64)
+	counterMetrics := make(map[string]int64)
+
+	go func(g map[string]float64) {
+		for {
+			var memStats runtime.MemStats
+			runtime.ReadMemStats(&memStats)
+			utils.CollectData(&memStats, g)
+			time.Sleep(time.Duration(cfg.PollInterval) * time.Second)
 		}
 
-		time.Sleep(time.Duration(cfg.PollInterval) * time.Second)
-	}
+	}(gaugeMetrics)
+	go func(g map[string]float64) {
+		for {
+			utils.SendData(g, counterMetrics, cfg.ServerAddress)
+			time.Sleep(time.Duration(cfg.ReportInterval) * time.Second)
+		}
+
+	}(gaugeMetrics)
+	select {}
 }

@@ -26,12 +26,12 @@ func sendCounterMetric(server string, k string, v int64) {
 	}
 }
 
-func SendData(gaugeMetrics *map[string]float64, counterMetrics *map[string]int64, server *string) {
-	for k, v := range *gaugeMetrics {
-		sendGaugeMetric(*server, k, v)
+func SendData(gaugeMetrics map[string]float64, counterMetrics map[string]int64, server string) {
+	for k, v := range gaugeMetrics {
+		sendGaugeMetric(server, k, v)
 	}
 
-	for k, v := range *counterMetrics {
-		sendCounterMetric(*server, k, v)
+	for k, v := range counterMetrics {
+		sendCounterMetric(server, k, v)
 	}
 }

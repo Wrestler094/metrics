@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"github.com/go-chi/chi/v5"
 	"net/http"
 	"strconv"
@@ -22,9 +23,10 @@ func (bh *BaseHandler) getMetricValueHandler(w http.ResponseWriter, r *http.Requ
 				return
 			}
 
-			output := strconv.FormatFloat(val, 'f', 3, 64)
-			output = strings.TrimRight(output, "0")
-			output = strings.TrimRight(output, ".")
+			// output := strconv.FormatFloat(val, 'f', 3, 64)
+			// output = strings.TrimRight(output, "0")
+			// output = strings.TrimRight(output, ".")
+			output := strings.Trim(fmt.Sprintf("%.5f", val), "0 .")
 
 			w.WriteHeader(http.StatusOK)
 			w.Write([]byte(output))
