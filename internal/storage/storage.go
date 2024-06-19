@@ -1,7 +1,7 @@
 package storage
 
 type Repository interface {
-	//GetMetrics() (*map[string]float64, *map[string]int64)
+	GetMetrics() (*map[string]float64, *map[string]int64)
 	GetGaugeMetric(gaugeName string) (float64, bool)
 	SetGaugeMetric(gaugeName string, newValue float64)
 	GetCounterMetric(metricName string) (int64, bool)
