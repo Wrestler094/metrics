@@ -63,7 +63,7 @@ func TestSendData(t *testing.T) {
 			}))
 			defer server.Close()
 
-			SendData(&test.args.gaugeMetrics, &test.args.counterMetrics, &server.URL)
+			SendData(test.args.gaugeMetrics, test.args.counterMetrics, server.URL)
 		})
 	}
 }
