@@ -20,9 +20,9 @@ func NewMemStorage() *MemStorage {
 	}
 }
 
-//func (ms *MemStorage) GetMetrics() (*map[string]float64, *map[string]int64) {
-//	return &ms.Gauge, &ms.Counter
-//}
+func (ms *MemStorage) GetMetrics() (*map[string]float64, *map[string]int64) {
+	return &ms.Gauge, &ms.Counter
+}
 
 func (ms *MemStorage) GetGaugeMetric(metricName string) (float64, bool) {
 	res, ok := ms.Gauge[metricName]
