@@ -39,10 +39,5 @@ func (ms *MemStorage) GetCounterMetric(metricName string) (int64, bool) {
 }
 
 func (ms *MemStorage) SetCounterMetric(metricName string, value int64) {
-	if _, ok := ms.Counter[metricName]; ok {
-		ms.Counter[metricName] += value
-		return
-	}
-
-	ms.Counter[metricName] = value
+	ms.Counter[metricName] += value
 }
