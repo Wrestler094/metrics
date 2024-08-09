@@ -13,12 +13,12 @@ func TestChangeGauge(t *testing.T) {
 
 	tests := []struct {
 		name    string
-		storage MemStorage
+		storage *MemStorage
 		metric  metric
 	}{
 		{
 			name: "Write gauge metric in empty storage",
-			storage: MemStorage{
+			storage: &MemStorage{
 				Gauge:   map[string]float64{},
 				Counter: map[string]int64{},
 			},
@@ -28,7 +28,7 @@ func TestChangeGauge(t *testing.T) {
 			},
 		}, {
 			name: "Write gauge metric in existed metric",
-			storage: MemStorage{
+			storage: &MemStorage{
 				Gauge: map[string]float64{
 					"testGauge": 200,
 				},
@@ -59,13 +59,13 @@ func TestIncreaseCounter(t *testing.T) {
 
 	tests := []struct {
 		name    string
-		storage MemStorage
+		storage *MemStorage
 		metric  metric
 		want    int64
 	}{
 		{
 			name: "Write counter metric in empty storage",
-			storage: MemStorage{
+			storage: &MemStorage{
 				Gauge:   map[string]float64{},
 				Counter: map[string]int64{},
 			},
@@ -76,7 +76,7 @@ func TestIncreaseCounter(t *testing.T) {
 			want: 100,
 		}, {
 			name: "Write counter metric in existed metric",
-			storage: MemStorage{
+			storage: &MemStorage{
 				Gauge: map[string]float64{},
 				Counter: map[string]int64{
 					"testCounter": 200,
