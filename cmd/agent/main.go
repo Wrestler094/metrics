@@ -37,12 +37,9 @@ func main() {
 		}
 
 	}(gaugeMetrics)
-	go func(g map[string]float64) {
-		for {
-			utils.SendData(g, counterMetrics, cfg.ServerAddress)
-			time.Sleep(time.Duration(cfg.ReportInterval) * time.Second)
-		}
 
-	}(gaugeMetrics)
-	select {}
+	for {
+		utils.SendData(gaugeMetrics, counterMetrics, cfg.ServerAddress)
+		time.Sleep(time.Duration(cfg.ReportInterval) * time.Second)
+	}
 }
