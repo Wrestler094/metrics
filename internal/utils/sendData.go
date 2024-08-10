@@ -32,7 +32,17 @@ func sendGaugeMetric(server string, k string, v float64) {
 		return
 	}
 
-	resp, err := http.Post(url, "application/json", &buf)
+	req, err := http.NewRequest("POST", url, &buf)
+	if err != nil {
+		fmt.Printf("Error creating request: %s\n", err)
+		return
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Content-Encoding", "gzip")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
 	if err != nil {
 		fmt.Printf("Metric %s sent with Error %s\n", k, err)
 		return
@@ -70,7 +80,17 @@ func sendCounterMetric(server string, k string, v int64) {
 		return
 	}
 
-	resp, err := http.Post(url, "application/json", &buf)
+	req, err := http.NewRequest("POST", url, &buf)
+	if err != nil {
+		fmt.Printf("Error creating request: %s\n", err)
+		return
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Content-Encoding", "gzip")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
 	if err != nil {
 		fmt.Printf("Metric %s sent with Error %s\n", k, err)
 		return
