@@ -28,6 +28,8 @@ func sendGaugeMetric(server string, k string, v float64) {
 		return
 	}
 
+	fmt.Printf("Metrics %s sent with value %f\n", k, v)
+
 	defer func() {
 		if closeErr := resp.Body.Close(); closeErr != nil {
 			fmt.Println("Error closing response body:", closeErr)
@@ -54,6 +56,8 @@ func sendCounterMetric(server string, k string, v int64) {
 		fmt.Printf("Metric %s sent with Error %s\n", k, err)
 		return
 	}
+
+	fmt.Printf("Metrics %s sent with value %d\n", k, v)
 
 	defer func() {
 		if closeErr := resp.Body.Close(); closeErr != nil {

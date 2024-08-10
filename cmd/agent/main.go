@@ -28,15 +28,14 @@ func main() {
 	gaugeMetrics := make(map[string]float64)
 	counterMetrics := make(map[string]int64)
 
-	go func(g map[string]float64, c map[string]int64) {
+	go func() {
 		for {
 			var memStats runtime.MemStats
 			runtime.ReadMemStats(&memStats)
-			utils.CollectData(&memStats, g, c)
+			utils.CollectData(&memStats, gaugeMetrics, counterMetrics)
 			time.Sleep(time.Duration(cfg.PollInterval) * time.Second)
 		}
-
-	}(gaugeMetrics, counterMetrics)
+	}()
 
 	for {
 		utils.SendData(gaugeMetrics, counterMetrics, cfg.ServerAddress)
