@@ -9,7 +9,7 @@ import (
 )
 
 func sendGaugeMetric(server string, k string, v float64) {
-	url := fmt.Sprintf("%s/update", server)
+	url := fmt.Sprintf("%s/update/", server)
 
 	out, err := json.Marshal(models.Metrics{
 		ID:    k,
@@ -36,7 +36,7 @@ func sendGaugeMetric(server string, k string, v float64) {
 }
 
 func sendCounterMetric(server string, k string, v int64) {
-	url := fmt.Sprintf("%s/update", server)
+	url := fmt.Sprintf("%s/update/", server)
 
 	out, err := json.Marshal(models.Metrics{
 		ID:    k,
