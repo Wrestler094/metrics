@@ -3,8 +3,6 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
-	"go.uber.org/zap"
-	"metrics/internal/logger"
 	"metrics/internal/models"
 	"net/http"
 )
@@ -18,7 +16,6 @@ func (bh *BaseHandler) postGetValueHandler(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	logger.Log.Info("metric", zap.Any("metric", metric))
 	w.Header().Set("Content-Type", "application/json")
 
 	switch metric.MType {
