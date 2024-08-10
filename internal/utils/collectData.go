@@ -5,7 +5,7 @@ import (
 	"runtime"
 )
 
-func CollectData(memStats *runtime.MemStats, gaugeMetrics map[string]float64) {
+func CollectData(memStats *runtime.MemStats, gaugeMetrics map[string]float64, counterMetrics map[string]int64) {
 	gaugeMetrics["Alloc"] = float64(memStats.Alloc)
 	gaugeMetrics["BuckHashSys"] = float64(memStats.BuckHashSys)
 	gaugeMetrics["Frees"] = float64(memStats.Frees)
@@ -34,4 +34,5 @@ func CollectData(memStats *runtime.MemStats, gaugeMetrics map[string]float64) {
 	gaugeMetrics["Sys"] = float64(memStats.Sys)
 	gaugeMetrics["TotalAlloc"] = float64(memStats.TotalAlloc)
 	gaugeMetrics["RandomValue"] = rand.Float64()
+	counterMetrics["PollCount"] += 1
 }
