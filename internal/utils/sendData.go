@@ -88,6 +88,7 @@ func sendCounterMetric(server string, k string, v int64) {
 
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Content-Encoding", "gzip")
+	req.Header.Set("Accept-Encoding", "gzip")
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
