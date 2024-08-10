@@ -42,7 +42,7 @@ func (bh *BaseHandler) getMetricValueHandler(w http.ResponseWriter, r *http.Requ
 		}
 	default:
 		{
-			http.Error(w, "Unknown metric type", http.StatusNotFound)
+			http.Error(w, "Unknown metric type", http.StatusBadRequest)
 			return
 		}
 	}
