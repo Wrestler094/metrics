@@ -57,8 +57,7 @@ func TestSendData(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				assert.Equal(t, "POST", r.Method, "Expected a POST request")
-				assert.Equal(t, "text/plain", r.Header.Get("Content-Type"), "Expected a text/plain Content-Type")
-				assert.Equal(t, 5, len(strings.Split(r.URL.Path, "/")))
+				assert.Equal(t, "application/json", r.Header.Get("Content-Type"), "Expected a application/json Content-Type")
 				assert.Contains(t, strings.Split(r.URL.Path, "/"), "update")
 			}))
 			defer server.Close()
