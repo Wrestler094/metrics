@@ -2,6 +2,7 @@ package utils
 
 import (
 	"bytes"
+	"compress/gzip"
 	"encoding/json"
 	"fmt"
 	"metrics/internal/models"
@@ -11,18 +12,27 @@ import (
 func sendGaugeMetric(server string, k string, v float64) {
 	url := fmt.Sprintf("%s/update/", server)
 
-	out, err := json.Marshal(models.Metrics{
+	var buf bytes.Buffer
+	gzipWriter := gzip.NewWriter(&buf)
+	jsonEncoder := json.NewEncoder(gzipWriter)
+
+	err := jsonEncoder.Encode(models.Metrics{
 		ID:    k,
 		MType: "gauge",
 		Value: &v,
 	})
 
 	if err != nil {
-		fmt.Println("Serialisation error", err)
+		fmt.Println("Encoding or compression error:", err)
 		return
 	}
 
-	resp, err := http.Post(url, "application/json", bytes.NewBuffer(out))
+	if err := gzipWriter.Close(); err != nil {
+		fmt.Println("Gzip writer close error:", err)
+		return
+	}
+
+	resp, err := http.Post(url, "application/json", &buf)
 	if err != nil {
 		fmt.Printf("Metric %s sent with Error %s\n", k, err)
 		return
