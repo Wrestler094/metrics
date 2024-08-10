@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-func (bh *BaseHandler) postMetricHandler(w http.ResponseWriter, r *http.Request) {
+func (bh *BaseHandler) postMetricValueHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain")
 
 	metricType := chi.URLParam(r, "type")
