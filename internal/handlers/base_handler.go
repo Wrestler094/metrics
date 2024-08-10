@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/go-chi/chi/v5"
+	"metrics/internal/compressor"
 	"metrics/internal/logger"
 	"metrics/internal/storage"
 )
@@ -17,6 +18,7 @@ func NewBaseHandler(storage storage.Repository) *BaseHandler {
 func (bh *BaseHandler) Router() *chi.Mux {
 	router := chi.NewRouter()
 	router.Use(logger.WithLogging)
+	router.Use(compressor.GzipMiddleware)
 
 	router.Get("/", bh.getMetricsHandler)
 	router.Get("/value/{type}/{name}", bh.getMetricValueHandler)
