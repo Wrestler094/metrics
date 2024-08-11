@@ -7,11 +7,6 @@ import (
 	"strings"
 )
 
-var supportedContentTypes = []string{
-	"application/json",
-	"text/html",
-}
-
 type compressWriter struct {
 	w  http.ResponseWriter
 	zw *gzip.Writer
@@ -71,23 +66,13 @@ func (c *compressReader) Close() error {
 	return c.zr.Close()
 }
 
-func isSupportedContentType(contentType string) bool {
-	for _, ct := range supportedContentTypes {
-		if strings.Contains(contentType, ct) {
-			return true
-		}
-	}
-	return false
-}
-
 func GzipMiddleware(h http.Handler) http.Handler {
 	gzipFn := func(w http.ResponseWriter, r *http.Request) {
 		ow := w
 
 		acceptEncoding := r.Header.Get("Accept-Encoding")
 		supportsGzip := strings.Contains(acceptEncoding, "gzip")
-		contentType := r.Header.Get("Content-Type")
-		if supportsGzip && isSupportedContentType(contentType) {
+		if supportsGzip {
 			cw := newCompressWriter(w)
 			ow = cw
 			defer cw.Close()
