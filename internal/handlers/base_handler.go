@@ -17,8 +17,8 @@ func NewBaseHandler(storage storage.Repository) *BaseHandler {
 
 func (bh *BaseHandler) Router() *chi.Mux {
 	router := chi.NewRouter()
-	router.Use(logger.WithLogging)
 	router.Use(compressor.GzipMiddleware)
+	router.Use(logger.WithLogging)
 
 	router.Get("/", bh.getMetricsHandler)
 	router.Get("/value/{type}/{name}", bh.getMetricValueHandler)
