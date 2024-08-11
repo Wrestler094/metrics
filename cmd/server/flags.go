@@ -28,7 +28,7 @@ func (f *Flags) Parse() {
 	var flags stringFlags
 	flag.StringVar(&flags.flagRunAddress, "a", "localhost:8080", "address and port to run server")
 	flag.StringVar(&flags.flagLogLevel, "l", "info", "log level")
-	flag.StringVar(&flags.flagStoreInterval, "i", "0", "time interval in seconds after which current server readings are saved to disk")
+	flag.StringVar(&flags.flagStoreInterval, "i", "300", "time interval in seconds after which current server readings are saved to disk")
 	flag.StringVar(&flags.flagFileStoragePath, "f", "internal/storage/storage.json", "path to the file where current values are saved")
 	flag.StringVar(&flags.flagRestore, "r", "true", "load or not previously saved values from the specified file when the server starts")
 	flag.Parse()
