@@ -2,6 +2,8 @@ package handlers
 
 import (
 	"encoding/json"
+	"go.uber.org/zap"
+	"metrics/internal/logger"
 	"metrics/internal/models"
 	"net/http"
 )
@@ -14,6 +16,7 @@ func (bh *BaseHandler) postUpdateValueHandler(w http.ResponseWriter, r *http.Req
 		return
 	}
 
+	logger.Log.Info("metric", zap.Any("metric", metric))
 	w.Header().Set("Content-Type", "application/json")
 
 	switch metric.MType {
