@@ -10,6 +10,7 @@ import (
 
 func (bh *BaseHandler) postUpdateValueHandler(w http.ResponseWriter, r *http.Request) {
 	var metric models.Metrics
+	logger.Log.Info("Start")
 
 	if err := json.NewDecoder(r.Body).Decode(&metric); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -22,6 +23,8 @@ func (bh *BaseHandler) postUpdateValueHandler(w http.ResponseWriter, r *http.Req
 	switch metric.MType {
 	case "gauge":
 		{
+			logger.Log.Info("gauge")
+
 			if metric.Value == nil {
 				http.Error(w, "Value doesn't exist in gauge metric", http.StatusBadRequest)
 				return
@@ -42,6 +45,8 @@ func (bh *BaseHandler) postUpdateValueHandler(w http.ResponseWriter, r *http.Req
 		}
 	case "counter":
 		{
+			logger.Log.Info("counter")
+
 			if metric.Delta == nil {
 				http.Error(w, "Delta doesn't exist in counter metric", http.StatusBadRequest)
 				return
