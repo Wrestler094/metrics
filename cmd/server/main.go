@@ -1,50 +1,48 @@
 package main
 
 import (
-	"flag"
 	"go.uber.org/zap"
 	"log"
 	"metrics/internal/handlers"
 	"metrics/internal/logger"
 	"metrics/internal/storage"
 	"net/http"
-	"os"
+	"time"
 )
 
 func main() {
-	var (
-		flagRunAddress string
-		flagLogLevel   string
-	)
-
 	// PARSE FLAGS
-	flag.StringVar(&flagRunAddress, "a", "localhost:8080", "address and port to run server")
-	flag.StringVar(&flagLogLevel, "l", "info", "log level")
-	flag.Parse()
-
-	if envRunAddress := os.Getenv("ADDRESS"); envRunAddress != "" {
-		flagRunAddress = envRunAddress
-	}
-	if envLogLevel := os.Getenv("LOG_LEVEL"); envLogLevel != "" {
-		flagLogLevel = envLogLevel
-	}
+	flags := Flags{}
+	flags.Parse()
 
 	// INITIALISE LOGGER
-	err := logger.Initialize(flagLogLevel)
+	err := logger.Initialize(flags.flagLogLevel)
 	if err != nil {
 		log.Fatalf("can't initialize zap logger: %v", err)
 	}
 	defer logger.Log.Sync()
 
 	// INITIALISE REPO & ROUTER
-	var repo storage.Repository = storage.NewMemStorage()
+	var syncMode = flags.flagStoreInterval == 0
+	var repo storage.Repository = storage.NewMemStorage(flags.flagFileStoragePath, syncMode)
+	if flags.flagRestore {
+		repo.RestoreData()
+	}
 	baseHandler := handlers.NewBaseHandler(repo)
 	router := baseHandler.Router()
 
-	// RUNNING SERVER
-	logger.Log.Info("Running server", zap.String("address", flagRunAddress))
+	// INIT SAVING GOROUTINE
+	go func() {
+		for !syncMode {
+			time.Sleep(time.Duration(flags.flagStoreInterval) * time.Second)
+			repo.SaveData()
+		}
+	}()
 
-	if err := http.ListenAndServe(flagRunAddress, router); err != nil {
+	// RUNNING SERVER
+	logger.Log.Info("Running server", zap.String("address", flags.flagRunAddress))
+
+	if err := http.ListenAndServe(flags.flagRunAddress, router); err != nil {
 		logger.Log.Info("Server error", zap.Error(err))
 	}
 }
