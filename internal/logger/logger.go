@@ -37,14 +37,19 @@ type loggingResponseWriter struct {
 }
 
 func (r *loggingResponseWriter) Write(b []byte) (int, error) {
+	if r.responseData.status == 0 {
+		r.WriteHeader(http.StatusOK)
+	}
 	size, err := r.ResponseWriter.Write(b)
 	r.responseData.size += size
 	return size, err
 }
 
 func (r *loggingResponseWriter) WriteHeader(statusCode int) {
-	r.ResponseWriter.WriteHeader(statusCode)
-	r.responseData.status = statusCode
+	if r.responseData.status == 0 {
+		r.responseData.status = statusCode
+		r.ResponseWriter.WriteHeader(statusCode)
+	}
 }
 
 func WithLogging(h http.Handler) http.Handler {
