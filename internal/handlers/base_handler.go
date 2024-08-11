@@ -23,7 +23,9 @@ func (bh *BaseHandler) Router() *chi.Mux {
 	router.Get("/", bh.getMetricsHandler)
 	router.Get("/value/{type}/{name}", bh.getMetricValueHandler)
 	router.Post("/update/{type}/{name}/{value}", bh.postMetricValueHandler)
+	router.Post("/update", bh.postUpdateValueHandler)
 	router.Post("/update/", bh.postUpdateValueHandler)
+	router.Post("/value", bh.postGetValueHandler)
 	router.Post("/value/", bh.postGetValueHandler)
 
 	return router
